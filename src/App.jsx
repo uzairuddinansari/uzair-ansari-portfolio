@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import HOME from "./pages/HOME";
+import About from "./pages/About";
 import Admin from "./pages/Admin";
 import AdminPanel from "./pages/AdminPanel";
 import AdminVisitors from "./pages/AdminVisitors";
@@ -32,6 +33,8 @@ export default function App() {
           <Route path="appearance" element={<AdminAppearance />} />
         </Route>
       </Route>
+
+      <Route path="/about" element={<About />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

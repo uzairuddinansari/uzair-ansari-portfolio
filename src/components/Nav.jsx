@@ -3,10 +3,11 @@ import { useState } from "react";
 import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import "../styles/Navbar.css";
+import { Link } from "react-router-dom";
 
 const links = [
   { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
+  { label: "About", href: "/about" },
   { label: "Skills", href: "#skills" },
   { label: "Projects", href: "#projects" },
   { label: "Journey", href: "#journey" },
@@ -51,9 +52,9 @@ export default function Navbar() {
 
       <nav className={`nav-links ${menuOpen ? "nav-open" : ""}`}>
         {links.map((link) => (
-          <a key={link.href} href={link.href} onClick={closeMenu}>
+          <Link key={link.href} to={link.href} onClick={closeMenu}>
             {link.label}
-          </a>
+          </Link>
         ))}
 
         <a
