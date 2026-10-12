@@ -1,0 +1,29 @@
+/* Poori website ke colours yahin se aate hain.
+   Admin > Appearance se bg / text / accent badalte hain to baaqi sab khud derive hota hai. */
+:root {
+  --bg: #080909;
+  --text: #f5f5f0;
+  --accent: #d5f278;
+  --on-accent: #10110b;
+
+  --muted: color-mix(in srgb, var(--text) 62%, var(--bg));
+  --border: color-mix(in srgb, var(--text) 11%, transparent);
+  --border-strong: color-mix(in srgb, var(--text) 30%, transparent);
+  --surface: color-mix(in srgb, var(--bg) 94%, var(--text));
+  --surface-2: color-mix(in srgb, var(--bg) 86%, var(--text));
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Stars (admin aur public dono mein use hota hai) */
+.stars {
+  color: var(--accent);
+  letter-spacing: 2px;
+}
+.stars i {
+  font-style: normal;
+  color: var(--border-strong);
+}

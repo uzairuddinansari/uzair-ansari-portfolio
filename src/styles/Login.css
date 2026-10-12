@@ -3,8 +3,8 @@
   min-height: 100vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  background: #080909;
-  color: #f4f3ee;
+  background: var(--bg);
+  color: var(--text);
   font-family: "DM Sans", sans-serif;
 }
 
@@ -23,7 +23,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #b9b9ae;
+  color: var(--muted);
   font-size: 11px;
   letter-spacing: 2px;
 }
@@ -33,9 +33,9 @@
   place-items: center;
   width: 38px;
   height: 38px;
-  border: 1px solid #d5f278;
+  border: 1px solid var(--accent);
   border-radius: 50%;
-  color: #d5f278;
+  color: var(--accent);
   font-size: 17px;
   letter-spacing: -1px;
 }
@@ -45,7 +45,7 @@
 }
 
 .admin-eyebrow {
-  color: #d5f278;
+  color: var(--accent);
   font-size: 10px;
   letter-spacing: 3px;
   margin-bottom: 20px;
@@ -62,11 +62,11 @@
 
 .admin-login-heading h1 span,
 .admin-visual-content h2 span {
-  color: #d5f278;
+  color: var(--accent);
 }
 
 .admin-login-heading > p:last-child {
-  color: #92938b;
+  color: var(--muted);
   font-size: 14px;
   margin-top: 22px;
 }
@@ -82,7 +82,7 @@
 }
 
 .admin-field label {
-  color: #c0c1b8;
+  color: var(--muted);
   font-size: 10px;
   letter-spacing: 1.8px;
 }
@@ -92,27 +92,27 @@
   min-width: 0;
   padding: 16px 0;
   border: 0;
-  border-bottom: 1px solid #383a34;
+  border-bottom: 1px solid var(--border-strong);
   outline: none;
   background: transparent;
-  color: #f4f3ee;
+  color: var(--text);
   font: inherit;
   font-size: 14px;
   transition: border-color 0.25s;
 }
 
 .admin-field input:focus {
-  border-color: #d5f278;
+  border-color: var(--accent);
 }
 
 .admin-field input::placeholder {
-  color: #66685f;
+  color: var(--muted);
 }
 
 .admin-password-wrap {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #383a34;
+  border-bottom: 1px solid var(--border-strong);
 }
 
 .admin-password-wrap input {
@@ -120,14 +120,14 @@
 }
 
 .admin-password-wrap:focus-within {
-  border-color: #d5f278;
+  border-color: var(--accent);
 }
 
 .admin-show-password {
   flex-shrink: 0;
   border: 0;
   background: transparent;
-  color: #d5f278;
+  color: var(--accent);
   font-size: 10px;
   letter-spacing: 1px;
   cursor: pointer;
@@ -145,9 +145,9 @@
   align-items: center;
   margin-top: 6px;
   padding: 17px 20px;
-  border: 1px solid #d5f278;
-  background: #d5f278;
-  color: #10120b;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
   font: inherit;
   font-size: 13px;
   font-weight: 700;
@@ -157,7 +157,7 @@
 
 .admin-login-submit:hover {
   background: transparent;
-  color: #d5f278;
+  color: var(--accent);
 }
 
 .admin-login-submit span {
@@ -169,7 +169,7 @@
   justify-content: space-between;
   gap: 12px;
   margin-top: 50px;
-  color: #65675e;
+  color: var(--muted);
   font-size: 9px;
   letter-spacing: 1.5px;
 }
@@ -183,7 +183,7 @@
   padding: 40px;
   overflow: hidden;
   background:
-    linear-gradient(0deg, rgba(5, 8, 6, 0.88), rgba(5, 8, 6, 0.12)),
+    linear-gradient(0deg, color-mix(in srgb, var(--bg) 88%, transparent), color-mix(in srgb, var(--bg) 12%, transparent)),
     url("https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1400&q=85")
     center / cover no-repeat;
 }
@@ -191,7 +191,7 @@
 .admin-visual-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(213, 242, 120, 0.08), transparent 55%);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 8%, transparent), transparent 55%);
   pointer-events: none;
 }
 
@@ -206,7 +206,7 @@
   display: flex;
   justify-content: space-between;
   gap: 16px;
-  color: #dedfd5;
+  color: var(--text);
   font-size: 9px;
   letter-spacing: 2px;
 }
@@ -216,7 +216,7 @@
 }
 
 .admin-visual-content > p:first-child {
-  color: #d5f278;
+  color: var(--accent);
   font-size: 10px;
   letter-spacing: 3px;
 }
@@ -234,18 +234,18 @@
   width: 55px;
   height: 1px;
   margin: 30px 0;
-  background: #d5f278;
+  background: var(--accent);
 }
 
 .admin-visual-caption {
   max-width: 280px;
-  color: #d0d1c7;
+  color: var(--text);
   font-size: 13px;
   line-height: 1.8;
 }
 
 .admin-visual-index {
-  color: #dedfd5;
+  color: var(--text);
   font-size: 10px;
   letter-spacing: 2px;
 }
