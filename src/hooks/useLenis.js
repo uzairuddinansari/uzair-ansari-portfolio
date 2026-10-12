@@ -12,25 +12,33 @@ gsap.registerPlugin(ScrollTrigger);
  */
 export default function useLenis() {
   useEffect(() => {
+    // Ultra-smooth, lightweight Lenis configuration (zero drag lag)
     const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smooth: true,
-      smoothTouch: false,
+      lerp: 0.09,
+      smoothWheel: true,
+      wheelMultiplier: 0.95,
+      touchMultiplier: 1.5,
+      infinite: false,
     });
 
-    // Sync Lenis with GSAP ticker so ScrollTrigger works correctly
+    // Sync Lenis scroll with GSAP ScrollTrigger
     lenis.on("scroll", ScrollTrigger.update);
 
-    const ticker = gsap.ticker.add((time) => {
+    const updateTicker = (time) => {
       lenis.raf(time * 1000);
-    });
+    };
 
-    gsap.ticker.lagSmoothing(0);
+    gsap.ticker.add(updateTicker);
+
+    // Refresh ScrollTrigger once Lenis is ready
+    const refreshTimer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 100);
 
     return () => {
+      clearTimeout(refreshTimer);
       lenis.destroy();
-      gsap.ticker.remove(ticker);
+      gsap.ticker.remove(updateTicker);
     };
   }, []);
 }

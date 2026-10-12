@@ -64,6 +64,19 @@ export default function AdminSkills() {
       return;
     }
 
+    if (!form.code.trim()) {
+      setError("Coding snippet zaroori hai.");
+      return;
+    }
+
+    // Strict validation: Agar code kisi doosri skill ka hai to submit block karein
+    if (!scanResult.matches || scanResult.status === "warning") {
+      setError(
+        `Code Mismatch Error: ${scanResult.message} Sahi code enter karein ya skill name theek karein, yeh submit nahi ho sakta.`
+      );
+      return;
+    }
+
     const payload = {
       name: form.name.trim(),
       description: form.description.trim(),
@@ -71,7 +84,7 @@ export default function AdminSkills() {
       category: form.category,
       createdDate: form.createdDate.trim() || "History date not specified",
       purpose: form.purpose.trim() || form.description.trim(),
-      code: form.code.trim() || "// No code snippet provided",
+      code: form.code.trim(),
     };
 
     if (editId) {
@@ -273,7 +286,20 @@ export default function AdminSkills() {
           {error && <p className="adm-error">{error}</p>}
 
           <div className="adm-actions">
-            <button type="submit" className="adm-btn">
+            <button
+              type="submit"
+              className="adm-btn"
+              style={
+                !scanResult.matches && form.code.trim()
+                  ? { opacity: 0.65 }
+                  : {}
+              }
+              title={
+                !scanResult.matches && form.code.trim()
+                  ? "Code mismatch detected - please correct code to submit"
+                  : ""
+              }
+            >
               <Icon name={editId ? "check" : "plus"} size={16} />
               {editId ? "Update skill & code" : "Add skill & code"}
             </button>

@@ -2,8 +2,10 @@
 
 const PATTERNS = [
   {
+    id: "react",
     lang: "React (JSX)",
-    family: ["frontend", "react", "nextjs", "javascript"],
+    type: "frontend",
+    techs: ["react", "nextjs", "jsx", "frontend"],
     regex: [
       /import\s+.*\s+from\s+['"]react['"]/i,
       /useState\s*\(/,
@@ -18,8 +20,10 @@ const PATTERNS = [
     keywords: ["useState", "useEffect", "JSX", "component", "props", "className"],
   },
   {
+    id: "html",
     lang: "HTML",
-    family: ["frontend", "html", "markup"],
+    type: "frontend",
+    techs: ["html", "markup", "frontend"],
     regex: [
       /<!DOCTYPE\s+html>/i,
       /<html(\s+[^>]*)?>/i,
@@ -31,8 +35,10 @@ const PATTERNS = [
     keywords: ["<!DOCTYPE>", "<html>", "<head>", "<body>", "<section>"],
   },
   {
+    id: "css",
     lang: "CSS",
-    family: ["frontend", "css", "styling", "tailwind"],
+    type: "frontend",
+    techs: ["css", "styling", "tailwind", "sass", "scss", "frontend"],
     regex: [
       /@media\s*\([^)]+\)/i,
       /@keyframes\s+[a-zA-Z0-9_\-]+/i,
@@ -44,8 +50,10 @@ const PATTERNS = [
     keywords: ["keyframes", "flexbox", "grid", "vars", "media-query"],
   },
   {
+    id: "node",
     lang: "Node.js / Express (Backend)",
-    family: ["backend", "node", "express", "api", "server"],
+    type: "backend",
+    techs: ["node", "express", "backend", "api", "server"],
     regex: [
       /require\s*\(\s*['"]express['"]\s*\)/i,
       /express\s*\(\s*\)/i,
@@ -58,8 +66,10 @@ const PATTERNS = [
     keywords: ["express()", "app.use", "res.json", "middleware", "mongoose"],
   },
   {
+    id: "python",
     lang: "Python (Backend / Scripting)",
-    family: ["backend", "python", "django", "flask", "ai", "fastapi"],
+    type: "backend",
+    techs: ["python", "django", "flask", "ai", "fastapi", "backend"],
     regex: [
       /def\s+[a-zA-Z0-9_]+\s*\([^)]*\):/,
       /class\s+[a-zA-Z0-9_]+(\([^)]*\))?:/,
@@ -74,8 +84,10 @@ const PATTERNS = [
     keywords: ["def", "import", "class", "self", "elif", "@app.route"],
   },
   {
-    lang: "SQL / Database",
-    family: ["backend", "database", "sql", "postgres", "mysql", "mongodb"],
+    id: "sql",
+    lang: "SQL (Database / Backend)",
+    type: "backend",
+    techs: ["sql", "database", "postgres", "mysql", "mongodb", "backend"],
     regex: [
       /SELECT\s+.*?\s+FROM\s+/i,
       /INSERT\s+INTO\s+/i,
@@ -88,8 +100,10 @@ const PATTERNS = [
     keywords: ["SELECT", "FROM", "WHERE", "JOIN", "TABLE"],
   },
   {
+    id: "js",
     lang: "JavaScript / TypeScript",
-    family: ["frontend", "backend", "javascript", "typescript", "js", "ts"],
+    type: "code",
+    techs: ["javascript", "typescript", "js", "ts", "frontend", "backend"],
     regex: [
       /const\s+[a-zA-Z0-9_]+\s*=\s*/,
       /let\s+[a-zA-Z0-9_]+\s*=\s*/,
@@ -104,8 +118,10 @@ const PATTERNS = [
     keywords: ["const", "let", "async/await", "arrow function", "interface"],
   },
   {
+    id: "git",
     lang: "Git / Shell (Tools)",
-    family: ["tools", "git", "github", "bash", "shell", "docker"],
+    type: "tools",
+    techs: ["tools", "git", "github", "bash", "shell", "docker"],
     regex: [
       /git\s+(commit|add|push|pull|status|checkout|branch|merge|clone)/i,
       /npm\s+(run|install|i|start|build)/i,
@@ -169,7 +185,7 @@ export function scanCode(code, skillName = "", category = "") {
   if (!bestMatch || highestScore === 0) {
     return {
       status: "neutral",
-      message: "Generic code syntax detected. Skill name ke saath verify kiya ja raha hai.",
+      message: "Generic syntax detected. Verified for submission.",
       detectedLang: "Plain Text / Code",
       confidence: 50,
       matches: true,
@@ -179,37 +195,45 @@ export function scanCode(code, skillName = "", category = "") {
 
   const confidence = Math.min(99, Math.round(50 + highestScore * 6));
 
-  // Determine if code matches the user's skill or category
-  const familyMatches = bestMatch.family.some(
-    (f) =>
-      normalizedSkill.includes(f) ||
-      f.includes(normalizedSkill) ||
-      normalizedCat.includes(f)
-  );
+  // 1. SPECIFIC SKILL DISQUALIFICATIONS:
+  // If the user specifies a specific technology name, prevent cross-language mismatch!
+  let mismatchReason = null;
 
-  // Special checks:
-  // If user says category is "Backend" and code is Python, Node, Express, SQL => match!
-  const isBackendCategory = normalizedCat === "backend";
-  const isBackendCode =
-    bestMatch.lang.includes("Backend") ||
-    bestMatch.lang.includes("Python") ||
-    bestMatch.lang.includes("SQL") ||
-    bestMatch.lang.includes("Node");
+  // Specific check for HTML
+  if (normalizedSkill.includes("html") && bestMatch.id !== "html") {
+    mismatchReason = `Skill "HTML" select ki hai lekin code ${bestMatch.lang} ka hai.`;
+  }
+  // Specific check for CSS
+  else if (normalizedSkill.includes("css") && bestMatch.id !== "css") {
+    mismatchReason = `Skill "CSS" select ki hai lekin code ${bestMatch.lang} ka hai.`;
+  }
+  // Specific check for Python
+  else if (normalizedSkill.includes("python") && bestMatch.id !== "python") {
+    mismatchReason = `Skill "Python" select ki hai lekin code ${bestMatch.lang} ka hai.`;
+  }
+  // Specific check for SQL
+  else if (normalizedSkill.includes("sql") && bestMatch.id !== "sql") {
+    mismatchReason = `Skill "SQL" select ki hai lekin code ${bestMatch.lang} ka hai.`;
+  }
+  // Specific check for Git / GitHub
+  else if ((normalizedSkill.includes("git") || normalizedSkill.includes("github")) && bestMatch.id !== "git") {
+    mismatchReason = `Skill "${skillName}" select ki hai lekin code ${bestMatch.lang} ka hai.`;
+  }
+  // Specific check for React
+  else if (normalizedSkill.includes("react") && !["react", "js"].includes(bestMatch.id)) {
+    mismatchReason = `Skill "React" select ki hai lekin code ${bestMatch.lang} ka hai.`;
+  }
+  // Category-level mismatches:
+  // Backend category with Frontend-only code (CSS or pure HTML)
+  else if (normalizedCat === "backend" && ["css", "html"].includes(bestMatch.id)) {
+    mismatchReason = `Category "Backend" select ki hai jabke code ${bestMatch.lang} ka hai.`;
+  }
+  // Frontend category with Backend-only code (Python or SQL)
+  else if (normalizedCat === "frontend" && ["python", "sql"].includes(bestMatch.id)) {
+    mismatchReason = `Category "Frontend" select ki hai jabke code ${bestMatch.lang} ka hai.`;
+  }
 
-  // If user says category is "Frontend" and code is CSS, HTML, React, JS => match!
-  const isFrontendCategory = normalizedCat === "frontend";
-  const isFrontendCode =
-    bestMatch.lang.includes("Frontend") ||
-    bestMatch.lang.includes("React") ||
-    bestMatch.lang.includes("CSS") ||
-    bestMatch.lang.includes("HTML") ||
-    bestMatch.lang.includes("JavaScript");
-
-  const categoryMatches =
-    (isBackendCategory && isBackendCode) ||
-    (isFrontendCategory && isFrontendCode);
-
-  const isMatch = familyMatches || categoryMatches;
+  const isMatch = !mismatchReason;
 
   if (isMatch) {
     return {
@@ -226,7 +250,7 @@ export function scanCode(code, skillName = "", category = "") {
       detectedLang: bestMatch.lang,
       confidence,
       matches: false,
-      message: `Scanner Alert: Code ${bestMatch.lang} lag raha hai, jabke skill "${skillName || category}" select ki hai.`,
+      message: `Mismatch Alert: ${mismatchReason} Ye code submit nahi ho sakta.`,
       keywordsFound: matchedKeywords,
     };
   }
