@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import useSite from "../hooks/useSite";
@@ -131,13 +132,53 @@ const FallbackIcon = ({ name }) => (
 
 export default function Skills() {
   const { skills } = useSite();
+  const navigate = useNavigate();
   const pageRef = useRef(null);
+  const [activeSkill, setActiveSkill] = useState(null);
+  const [copied, setCopied] = useState(false);
+
+  const handleContactRedirect = (e) => {
+    e.preventDefault();
+    navigate("/#contact", { state: { scrollTo: "contact" } });
+  };
 
   useLenis();
 
+  // Close shutter on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setActiveSkill(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  // Lock background scrolling and allow shutter to scroll natively
+  useEffect(() => {
+    if (activeSkill) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    };
+  }, [activeSkill]);
+
+  const handleCopyCode = (codeText) => {
+    if (!codeText) return;
+    navigator.clipboard.writeText(codeText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2200);
+  };
+
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-
       /* ── Header reveal ── */
       const headTl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
@@ -206,7 +247,6 @@ export default function Skills() {
           },
         }
       );
-
     }, pageRef);
 
     return () => ctx.revert();
@@ -220,11 +260,12 @@ export default function Skills() {
     return acc;
   }, {});
 
+  const codeLines = (activeSkill?.code || "").split("\n");
+
   return (
     <>
       <Navbar />
       <main className="skills-page" ref={pageRef}>
-
         {/* Ambient blobs */}
         <div className="skills-blob skills-blob--1" aria-hidden="true" />
         <div className="skills-blob skills-blob--2" aria-hidden="true" />
@@ -234,16 +275,21 @@ export default function Skills() {
           <p className="skills-kicker">MY TOOLKIT / SKILLS</p>
 
           <h1 className="skills-heading">
-            <span className="skills-word-wrap"><span className="skills-word">Tools I use</span></span>{" "}
-            <span className="skills-word-wrap"><span className="skills-word">to bring</span></span>
+            <span className="skills-word-wrap">
+              <span className="skills-word">Tools I use</span>
+            </span>{" "}
+            <span className="skills-word-wrap">
+              <span className="skills-word">to bring</span>
+            </span>
             <br />
-            <span className="skills-word-wrap"><span className="skills-word skills-word--accent">ideas to life.</span></span>
+            <span className="skills-word-wrap">
+              <span className="skills-word skills-word--accent">ideas to life.</span>
+            </span>
           </h1>
 
           <p className="skills-intro-text">
-            These are the technologies and tools I currently work with.
-            I focus on writing clean, maintainable code and building
-            interfaces that feel polished and responsive.
+            These are the technologies and tools I currently work with. Click any card to inspect
+            its creation timeline, purpose, and live code snippet.
           </p>
 
           <div className="skills-intro-line" aria-hidden="true" />
@@ -255,13 +301,32 @@ export default function Skills() {
             <p className="skills-cat-label">{category.toUpperCase()}</p>
             <div className="skills-grid">
               {list.map((skill) => (
-                <article className="skills-card" key={skill.id}>
+                <article
+                  className="skills-card"
+                  key={skill.id}
+                  onClick={() => setActiveSkill(skill)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setActiveSkill(skill);
+                    }
+                  }}
+                  title="Click to view origin details and code snippet"
+                >
                   <div className="skills-card-icon">
                     {SKILL_ICONS[skill.icon] || <FallbackIcon name={skill.name} />}
                   </div>
                   <div className="skills-card-body">
                     <h3 className="skills-card-name">{skill.name}</h3>
                     <p className="skills-card-desc">{skill.description}</p>
+                    <div className="skills-card-action-hint">
+                      <span>Inspect Code & History</span>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </div>
                   </div>
                   <div className="skills-card-shine" aria-hidden="true" />
                 </article>
@@ -277,26 +342,176 @@ export default function Skills() {
           </div>
           <h2 className="skills-learn-heading">Always learning.</h2>
           <p className="skills-learn-copy">
-            I don't claim expertise — I'm a developer who's constantly improving.
-            Every project teaches me something new, and I believe consistent
-            practice matters more than labels. My current focus is deepening
-            my understanding of React, exploring backend technologies, and
-            writing better code every day.
+            I don't claim expertise — I'm a developer who's constantly improving. Every project
+            teaches me something new, and I believe consistent practice matters more than labels.
+            My current focus is deepening my understanding of React, exploring backend
+            technologies, and writing better code every day.
           </p>
         </section>
 
         {/* ── CTA ── */}
         <section className="skills-cta">
           <p className="skills-cta-text">Interested in working together?</p>
-          <a href="/#contact" className="skills-cta-btn">
+          <a
+            href="/#contact"
+            className="skills-cta-btn"
+            onClick={handleContactRedirect}
+          >
             Let's Talk
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </a>
         </section>
-
       </main>
+
+      {/* ── SHUTTER DRAWER (SLIDES IN FROM LEFT) ── */}
+      {activeSkill && (
+        <div
+          className="skills-shutter-backdrop"
+          onClick={() => setActiveSkill(null)}
+          aria-hidden="true"
+        />
+      )}
+
+      <aside
+        className={`skills-shutter ${activeSkill ? "skills-shutter--open" : ""}`}
+        aria-label="Skill details shutter"
+        aria-hidden={!activeSkill}
+        data-lenis-prevent="true"
+        onWheel={(e) => e.stopPropagation()}
+        onTouchMove={(e) => e.stopPropagation()}
+      >
+        {activeSkill && (
+          <div
+            className="skills-shutter-content"
+            data-lenis-prevent="true"
+            onWheel={(e) => e.stopPropagation()}
+          >
+            {/* Top Close Bar */}
+            <div className="skills-shutter-topbar">
+              <div className="skills-shutter-badge">
+                <span className="skills-shutter-dot" />
+                {activeSkill.category?.toUpperCase() || "SKILL"}
+              </div>
+
+              <button
+                className="skills-shutter-close-btn"
+                onClick={() => setActiveSkill(null)}
+                aria-label="Close shutter"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Title & Icon Header */}
+            <div className="skills-shutter-head">
+              <div className="skills-shutter-icon-box">
+                {SKILL_ICONS[activeSkill.icon] || <FallbackIcon name={activeSkill.name} />}
+              </div>
+              <div>
+                <h2 className="skills-shutter-title">{activeSkill.name}</h2>
+                <p className="skills-shutter-desc">{activeSkill.description}</p>
+              </div>
+            </div>
+
+            {/* 1. Date & Origin Section */}
+            <div className="skills-shutter-section">
+              <div className="skills-shutter-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span>CREATION & TIMELINE (Kese aur kab bani)</span>
+              </div>
+              <div className="skills-shutter-callout">
+                <strong>{activeSkill.createdDate || "History date not specified"}</strong>
+              </div>
+            </div>
+
+            {/* 2. Purpose Section */}
+            <div className="skills-shutter-section">
+              <div className="skills-shutter-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 16v-4M12 8h.01" />
+                </svg>
+                <span>PURPOSE & USE CASE (Kis liye use hoti he)</span>
+              </div>
+              <div className="skills-shutter-callout">
+                <p>{activeSkill.purpose || activeSkill.description}</p>
+              </div>
+            </div>
+
+            {/* 3. Code Window (Fixed IDE Theme — Not affected by appearance variables) */}
+            <div className="skills-shutter-section skills-shutter-section--code">
+              <div className="skills-shutter-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="16 18 22 12 16 6" />
+                  <polyline points="8 6 2 12 8 18" />
+                </svg>
+                <span>SAMPLE IMPLEMENTATION (Code snippet)</span>
+              </div>
+
+              <div className="skills-fixed-ide">
+                {/* IDE macOS Topbar */}
+                <div className="skills-ide-bar">
+                  <div className="skills-ide-dots">
+                    <span className="skills-ide-dot skills-ide-dot--red" />
+                    <span className="skills-ide-dot skills-ide-dot--yellow" />
+                    <span className="skills-ide-dot skills-ide-dot--green" />
+                  </div>
+                  <span className="skills-ide-filename">
+                    {activeSkill.name.toLowerCase()}-snippet.{activeSkill.icon === "html" ? "html" : activeSkill.icon === "css" ? "css" : activeSkill.icon === "python" ? "py" : "jsx"}
+                  </span>
+                  <button
+                    className="skills-ide-copy-btn"
+                    onClick={() => handleCopyCode(activeSkill.code)}
+                  >
+                    {copied ? (
+                      <>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                        </svg>
+                        Copy
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {/* IDE Code Content with Line Numbers */}
+                <div className="skills-ide-body">
+                  <div className="skills-ide-gutter" aria-hidden="true">
+                    {codeLines.map((_, i) => (
+                      <span key={i}>{i + 1}</span>
+                    ))}
+                  </div>
+                  <pre className="skills-ide-pre">
+                    <code className="skills-ide-code">{activeSkill.code}</code>
+                  </pre>
+                </div>
+              </div>
+            </div>
+
+            {/* Shutter Footer Note */}
+            <div className="skills-shutter-footer-note">
+              <span>Press <kbd>Esc</kbd> or click anywhere outside to close shutter</span>
+            </div>
+          </div>
+        )}
+      </aside>
     </>
   );
 }

@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import PageHeader from "../components/PageHeader";
 import EmptyState from "../components/EmptyState";
 import Icon from "../components/Icon";
 import useSite from "../hooks/useSite";
+import { scanCode } from "../utils/codeScanner";
 
 const EMPTY_FORM = {
   name: "",
   description: "",
   icon: "react",
   category: "Frontend",
+  createdDate: "",
+  purpose: "",
+  code: "",
 };
 
 const ICON_OPTIONS = [
@@ -39,6 +43,10 @@ export default function AdminSkills() {
   const [error, setError] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(null);
 
+  const scanResult = useMemo(() => {
+    return scanCode(form.code, form.name, form.category);
+  }, [form.code, form.name, form.category]);
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -52,25 +60,25 @@ export default function AdminSkills() {
     }
 
     if (!form.description.trim()) {
-      setError("Description zaroori hai.");
+      setError("Short description zaroori hai.");
       return;
     }
 
+    const payload = {
+      name: form.name.trim(),
+      description: form.description.trim(),
+      icon: form.icon.trim().toLowerCase() || "react",
+      category: form.category,
+      createdDate: form.createdDate.trim() || "History date not specified",
+      purpose: form.purpose.trim() || form.description.trim(),
+      code: form.code.trim() || "// No code snippet provided",
+    };
+
     if (editId) {
-      updateSkill(editId, {
-        name: form.name.trim(),
-        description: form.description.trim(),
-        icon: form.icon.trim().toLowerCase() || "react",
-        category: form.category,
-      });
+      updateSkill(editId, payload);
       setEditId(null);
     } else {
-      addSkill({
-        name: form.name.trim(),
-        description: form.description.trim(),
-        icon: form.icon.trim().toLowerCase() || "react",
-        category: form.category,
-      });
+      addSkill(payload);
     }
 
     setForm(EMPTY_FORM);
@@ -80,15 +88,17 @@ export default function AdminSkills() {
 
   const startEdit = (skill) => {
     setForm({
-      name: skill.name,
-      description: skill.description,
+      name: skill.name || "",
+      description: skill.description || "",
       icon: skill.icon || "react",
       category: skill.category || "Frontend",
+      createdDate: skill.createdDate || "",
+      purpose: skill.purpose || "",
+      code: skill.code || "",
     });
     setEditId(skill.id);
     setError("");
     setConfirmDelete(null);
-    // Scroll form into view if on mobile
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -111,8 +121,8 @@ export default function AdminSkills() {
     <>
       <PageHeader
         eyebrow="PORTFOLIO"
-        title="Skills"
-        text="Yahan add aur edit kiye hue skills public Skills page par live dikhte hain."
+        title="Skills & Code Engine"
+        text="Yahan skills, origin details aur coding snippets manage karein. Admin scanner code ko automatically verify karega."
       >
         <span className="adm-pill big">{skills.length} total</span>
       </PageHeader>
@@ -121,10 +131,8 @@ export default function AdminSkills() {
         {/* Left Form */}
         <form className="adm-card adm-form" onSubmit={handleSubmit}>
           <div className="adm-card-head">
-            <h3>{editId ? "Edit Skill" : "New Skill"}</h3>
-            {editId && (
-              <span className="adm-chip approved">Editing</span>
-            )}
+            <h3>{editId ? "Edit Skill & Code" : "New Skill & Code"}</h3>
+            {editId && <span className="adm-chip approved">Editing ID #{editId}</span>}
           </div>
 
           <label className="adm-field">
@@ -134,74 +142,140 @@ export default function AdminSkills() {
               name="name"
               value={form.name}
               onChange={handleChange}
-              placeholder="e.g. React, Next.js, Docker"
+              placeholder="e.g. React, Express, Python Backend"
               maxLength={40}
             />
           </label>
 
-          <label className="adm-field">
-            <span>Category</span>
-            <select
-              className="adm-input"
-              name="category"
-              value={form.category}
-              onChange={handleChange}
-            >
-              {CATEGORY_OPTIONS.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </label>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <label className="adm-field">
+              <span>Category</span>
+              <select
+                className="adm-input"
+                name="category"
+                value={form.category}
+                onChange={handleChange}
+              >
+                {CATEGORY_OPTIONS.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="adm-field">
+              <span>Icon</span>
+              <select
+                className="adm-input"
+                name="icon"
+                value={form.icon}
+                onChange={handleChange}
+              >
+                {ICON_OPTIONS.map((ic) => (
+                  <option key={ic} value={ic}>
+                    {ic.toUpperCase()}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
 
           <label className="adm-field">
-            <span>Icon</span>
-            <select
-              className="adm-input"
-              name="icon"
-              value={form.icon}
-              onChange={handleChange}
-            >
-              {ICON_OPTIONS.map((ic) => (
-                <option key={ic} value={ic}>
-                  {ic.toUpperCase()}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="adm-field">
-            <span>Custom Icon Key (optional)</span>
+            <span>Creation / History Date (Kese aur kab bani)</span>
             <input
               className="adm-input"
-              name="icon"
-              value={form.icon}
+              name="createdDate"
+              value={form.createdDate}
               onChange={handleChange}
-              placeholder="e.g. tailwind, typescript"
-              maxLength={30}
+              placeholder="e.g. 1995 by Brendan Eich / May 2013 by Jordan Walke"
+              maxLength={80}
             />
           </label>
 
           <label className="adm-field">
-            <span>Description *</span>
+            <span>Purpose (Kis liye use hoti he)</span>
             <textarea
               className="adm-input"
+              name="purpose"
+              rows="2"
+              value={form.purpose}
+              onChange={handleChange}
+              placeholder="e.g. Building component-driven interactive web applications..."
+              maxLength={260}
+            />
+          </label>
+
+          <label className="adm-field">
+            <span>Short Card Description *</span>
+            <input
+              className="adm-input"
               name="description"
-              rows="3"
               value={form.description}
               onChange={handleChange}
               placeholder="e.g. Creating reusable component-based interfaces."
-              maxLength={220}
+              maxLength={120}
             />
           </label>
+
+          {/* Coding Snippet Textarea */}
+          <label className="adm-field">
+            <span>Coding Snippet (Shutter drawer mein display hoga) *</span>
+            <textarea
+              className="adm-input adm-code-editor-input"
+              name="code"
+              rows="7"
+              value={form.code}
+              onChange={handleChange}
+              placeholder={`// Paste your ${form.name || form.category} code here...\nfunction example() {\n  return "clean code";\n}`}
+              spellCheck="false"
+            />
+          </label>
+
+          {/* Live Code Scanner Result Box */}
+          {form.code.trim() && (
+            <div
+              className={`adm-scanner-box ${
+                scanResult.status === "success"
+                  ? "adm-scanner-success"
+                  : scanResult.status === "warning"
+                  ? "adm-scanner-warning"
+                  : "adm-scanner-neutral"
+              }`}
+            >
+              <div className="adm-scanner-top">
+                <div className="adm-scanner-title">
+                  <span className="adm-scanner-dot" />
+                  <strong>AI Code Scanner</strong>
+                </div>
+                {scanResult.detectedLang && (
+                  <span className="adm-scanner-badge">
+                    {scanResult.detectedLang} ({scanResult.confidence}%)
+                  </span>
+                )}
+              </div>
+
+              <p className="adm-scanner-msg">{scanResult.message}</p>
+
+              {scanResult.keywordsFound?.length > 0 && (
+                <div className="adm-scanner-keywords">
+                  <span>Detected patterns:</span>
+                  {scanResult.keywordsFound.map((kw, i) => (
+                    <span key={i} className="adm-keyword-pill">
+                      {kw}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {error && <p className="adm-error">{error}</p>}
 
           <div className="adm-actions">
             <button type="submit" className="adm-btn">
               <Icon name={editId ? "check" : "plus"} size={16} />
-              {editId ? "Update skill" : "Add skill"}
+              {editId ? "Update skill & code" : "Add skill & code"}
             </button>
             {editId && (
               <button
@@ -221,7 +295,7 @@ export default function AdminSkills() {
             <EmptyState
               icon="skills"
               title="Koi skill nahi mila"
-              text="Left side ke form se pehla skill add karein."
+              text="Left side ke form se pehla skill aur coding add karein."
             />
           ) : (
             <div className="adm-skills-grid">
@@ -241,6 +315,23 @@ export default function AdminSkills() {
                   </div>
 
                   <p className="adm-skill-item-desc">{s.description}</p>
+
+                  {s.createdDate && (
+                    <div className="adm-skill-meta-row">
+                      <small>📅 {s.createdDate}</small>
+                    </div>
+                  )}
+
+                  {/* Code snippet mini-preview */}
+                  <div className="adm-skill-code-peek">
+                    <div className="adm-skill-code-peek-bar">
+                      <span>CODE PREVIEW</span>
+                      <small>{s.code?.split("\n").length || 0} lines</small>
+                    </div>
+                    <pre className="adm-skill-code-peek-text">
+                      {s.code ? s.code.slice(0, 160) + (s.code.length > 160 ? "..." : "") : "// No code"}
+                    </pre>
+                  </div>
 
                   <div className="adm-card-actions">
                     <button
