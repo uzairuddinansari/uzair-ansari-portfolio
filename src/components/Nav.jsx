@@ -1,5 +1,8 @@
+
 import { useState } from "react";
-import "./Navbar.css";
+import { useLayoutEffect, useRef } from "react";
+import { gsap } from "gsap";
+import "../styles/Navbar.css";
 
 const links = [
   { label: "Home", href: "#home" },
@@ -12,13 +15,28 @@ const links = [
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".nav-logo, .nav-toggle, .nav-links > a", {
+        y: -15,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.07,
+        ease: "power3.out",
+      });
+    }, navRef);
+
+    return () => ctx.revert();
+  }, []);
 
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <header className="navbar">
+    <header className="navbar" ref={navRef}>
       <a className="nav-logo" href="#home" onClick={closeMenu}>
-       
+        UZAIR<span>.</span>
       </a>
 
       <button
@@ -32,11 +50,7 @@ export default function Navbar() {
 
       <nav className={`nav-links ${menuOpen ? "nav-open" : ""}`}>
         {links.map((link) => (
-          <a
-            key={link.href}
-            href={link.href}
-            onClick={closeMenu}
-          >
+          <a key={link.href} href={link.href} onClick={closeMenu}>
             {link.label}
           </a>
         ))}

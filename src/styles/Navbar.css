@@ -1,0 +1,124 @@
+
+.navbar {
+  position: relative;
+  z-index: 20;
+  width: calc(100vw - 1vw);
+  min-height: 90px;
+  padding: 0 5.5%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  border-bottom: 1px solid #ffffff1c;
+  background: #080909;
+  color: #f5f5f0;
+  font-family: "DM Sans", sans-serif;
+}
+
+.nav-logo {
+  color: #f5f5f0;
+  font: 700 2rem "Space Grotesk", sans-serif;
+  letter-spacing: -.07em;
+  text-decoration: none;
+}
+
+.nav-logo span { color: #d5f278; }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(15px, 2.8vw, 40px);
+}
+
+.nav-links a {
+  position: relative;
+  color: #d0d1ca;
+  font-size: .82rem;
+  text-decoration: none;
+  transition: color .25s;
+}
+
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 100%;
+  height: 1px;
+  background: #d5f278;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .25s;
+}
+
+.nav-links a:hover { color: #d5f278; }
+.nav-links a:hover::after { transform: scaleX(1); }
+
+.nav-links .nav-resume {
+  padding: 12px 20px;
+  border: 1px solid #ffffff65;
+  border-radius: 30px;
+}
+
+.nav-links .nav-resume::after { display: none; }
+
+.nav-links .nav-resume:hover {
+  color: #10110b;
+  background: #d5f278;
+  border-color: #d5f278;
+}
+
+.nav-toggle {
+  display: none;
+  border: 1px solid #ffffff40;
+  border-radius: 30px;
+  padding: 10px 14px;
+  background: transparent;
+  color: #f5f5f0;
+  font: inherit;
+  font-size: .72rem;
+  cursor: pointer;
+}
+
+@media (max-width: 760px) {
+  .navbar {
+    /* width: 92%; */
+    min-height: 76px;
+  }
+
+  .nav-logo { font-size: 1.7rem; }
+  .nav-toggle { display: block; }
+
+  .nav-links {
+    position: absolute;
+    top: calc(100% + 1px);
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 10px 20px;
+    border: 1px solid #ffffff20;
+    background: #0b0c0b;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity .25s, transform .25s, visibility .25s;
+  }
+
+  .nav-links.nav-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .nav-links a {
+    padding: 14px 0;
+    font-size: .88rem;
+  }
+
+  .nav-links a::after { bottom: 7px; }
+  .nav-links .nav-resume { padding: 12px 0; border: 0; }
+}
