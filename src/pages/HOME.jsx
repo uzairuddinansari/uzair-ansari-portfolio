@@ -2,12 +2,14 @@ import Hero from "../components/Hero.jsx";
 import Navbar from "../components/Nav.jsx";
 import ProjectsSection from "../components/ProjectsSection.jsx";
 import ReviewsSection from "../components/ReviewsSection.jsx";
-import ContactSection from "../components/ContactSection.jsx";
+import Footer from "../components/Footer.jsx";
 import useVisitorTracker from "../hooks/useVisitorTracker";
+import useLenis from "../hooks/useLenis";
 import "../styles/Sections.css";
 
 function HOME() {
   useVisitorTracker(); // admin ko live visitor dikhane ke liye
+  useLenis();          // Lenis smooth scroll (synced with GSAP ScrollTrigger)
 
   return (
     <>
@@ -17,10 +19,10 @@ function HOME() {
         <Hero />
         <ProjectsSection />
         <ReviewsSection />
-        <ContactSection />
       </main>
 
-      <footer className="sec-footer">© 2026 Uzair Ansari. All rights reserved.</footer>
+      {/* Footer has Let's Talk contact section built-in */}
+      <Footer />
     </>
   );
 }
