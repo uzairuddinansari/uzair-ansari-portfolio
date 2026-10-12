@@ -750,6 +750,73 @@
 .adm-preview-box h2 em { color: var(--accent); font-style: normal; }
 .adm-preview-box p:not(.adm-preview-kicker) { color: var(--muted); font-size: 14px; line-height: 1.6; }
 
+/* ---------- Skills Grid ---------- */
+.adm-skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.adm-skill-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  transition: 0.25s;
+}
+
+.adm-skill-item:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  transform: translateY(-2px);
+}
+
+.adm-skill-item.editing {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.adm-skill-item-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.adm-skill-item-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.adm-skill-item-cat {
+  display: inline-block;
+  margin-top: 3px;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.adm-skill-item-icon-tag {
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--surface-2);
+  color: var(--accent);
+  font-size: 11px;
+  font-family: monospace;
+}
+
+.adm-skill-item-desc {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0;
+  flex: 1;
+}
+
 /* ---------- Tablet / Mobile ---------- */
 @media (max-width: 980px) {
   .adm-two,

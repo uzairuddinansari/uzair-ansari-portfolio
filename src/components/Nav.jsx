@@ -6,10 +6,9 @@ import "../styles/Navbar.css";
 import { Link } from "react-router-dom";
 
 const links = [
-  { label: "Home", href: "#home" },
+  { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Skills", href: "/skills" },
-  { label: "Projects", href: "#projects" },
   { label: "Journey", href: "#journey" },
   { label: "Reviews", href: "#reviews" },
   { label: "Contact", href: "#contact" },

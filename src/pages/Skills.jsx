@@ -67,6 +67,56 @@ const SKILL_ICONS = {
       <path d="M16 3C8.8 3 3 8.8 3 16c0 5.7 3.7 10.6 8.8 12.3.65.1.9-.3.9-.6v-2.2c-3.6.8-4.4-1.7-4.4-1.7-.6-1.5-1.4-1.9-1.4-1.9-1.2-.8.1-.8.1-.8 1.3.1 2 1.3 2 1.3 1.1 2 3 1.4 3.7 1.1.1-.8.45-1.4.8-1.7-2.9-.3-5.9-1.4-5.9-6.4 0-1.4.5-2.6 1.3-3.5-.1-.3-.6-1.6.1-3.4 0 0 1.1-.4 3.6 1.3a12.3 12.3 0 0 1 6.5 0c2.5-1.6 3.5-1.3 3.5-1.3.7 1.8.3 3.1.1 3.4.8.9 1.3 2.1 1.3 3.5 0 5-3 5.9-5.9 6.2.5.4.9 1.2.9 2.4v3.5c0 .3.2.7.9.6C25.3 26.6 29 21.7 29 16c0-7.2-5.8-13-13-13z" fill="none" stroke="currentColor" strokeWidth="1.3" />
     </svg>
   ),
+  nextjs: (
+    <svg viewBox="0 0 32 32" className="skill-svg">
+      <circle cx="16" cy="16" r="13" fill="none" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M11 10v12M21 10v6" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M11 11l10 11" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  ),
+  typescript: (
+    <svg viewBox="0 0 32 32" className="skill-svg">
+      <rect x="3" y="3" width="26" height="26" rx="3" fill="none" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M8 12h8M12 12v10M17 19.5c.8.9 2 1.5 3.3 1.5 1.5 0 2.7-.8 2.7-2 0-2.5-5.5-1.2-5.5-4.5 0-1.5 1.3-2.5 3-2.5 1.2 0 2.2.5 2.8 1.2" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
+  ),
+  tailwind: (
+    <svg viewBox="0 0 32 32" className="skill-svg">
+      <path d="M9 13.5c1.5-3 4-4.5 7.5-4.5 5 0 6 3.5 7.5 5.5 1 1.3 2.3 2 4 2-1.5 3-4 4.5-7.5 4.5-5 0-6-3.5-7.5-5.5-1-1.3-2.3-2-4-2zM4 20.5c1.5-3 4-4.5 7.5-4.5 5 0 6 3.5 7.5 5.5 1 1.3 2.3 2 4 2-1.5 3-4 4.5-7.5 4.5-5 0-6-3.5-7.5-5.5-1-1.3-2.3-2-4-2z" fill="none" stroke="currentColor" strokeWidth="1.3" />
+    </svg>
+  ),
+  node: (
+    <svg viewBox="0 0 32 32" className="skill-svg">
+      <path d="M16 3l12 7v12l-12 7-12-7V10z" fill="none" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M16 11v10M11 13.5l5 2.5 5-2.5" fill="none" stroke="currentColor" strokeWidth="1.2" />
+    </svg>
+  ),
+  express: (
+    <svg viewBox="0 0 32 32" className="skill-svg">
+      <rect x="3" y="6" width="26" height="20" rx="4" fill="none" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M9 12h5M9 16h4M9 20h5M18 12l6 8M24 12l-6 8" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
+  ),
+  mongodb: (
+    <svg viewBox="0 0 32 32" className="skill-svg">
+      <path d="M16 3s8 7 8 13.5c0 4.5-3.5 8.5-8 11.5-4.5-3-8-7-8-11.5C8 10 16 3 16 3z" fill="none" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M16 4v23" fill="none" stroke="currentColor" strokeWidth="1.2" />
+    </svg>
+  ),
+  figma: (
+    <svg viewBox="0 0 32 32" className="skill-svg">
+      <circle cx="21" cy="11" r="4.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
+      <circle cx="21" cy="20" r="4.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M11 6.5h5.5v9H11a4.5 4.5 0 0 1 0-9zM11 15.5h5.5v9H11a4.5 4.5 0 0 1 0-9z" fill="none" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  ),
+  python: (
+    <svg viewBox="0 0 32 32" className="skill-svg">
+      <path d="M16 3c-4.5 0-7 1.5-7 4.5v3h7v1H7C4 11.5 3 13 3 16s1 4.5 4 4.5h2v-3c0-2.5 2-4.5 4.5-4.5h7c1.5 0 2.5-1 2.5-2.5V7.5C23 4.5 20.5 3 16 3z" fill="none" stroke="currentColor" strokeWidth="1.2" />
+      <circle cx="12" cy="7.5" r="1" fill="currentColor" />
+      <circle cx="20" cy="24.5" r="1" fill="currentColor" />
+    </svg>
+  ),
 };
 
 // Fallback icon

@@ -1,12 +1,33 @@
 import { useState } from "react";
+import PageHeader from "../components/PageHeader";
+import EmptyState from "../components/EmptyState";
 import Icon from "../components/Icon";
 import useSite from "../hooks/useSite";
 
-const EMPTY_FORM = { name: "", description: "", icon: "", category: "Frontend" };
+const EMPTY_FORM = {
+  name: "",
+  description: "",
+  icon: "react",
+  category: "Frontend",
+};
 
 const ICON_OPTIONS = [
-  "html", "css", "javascript", "react", "gsap",
-  "bootstrap", "git", "github",
+  "html",
+  "css",
+  "javascript",
+  "react",
+  "gsap",
+  "bootstrap",
+  "git",
+  "github",
+  "nextjs",
+  "typescript",
+  "tailwind",
+  "node",
+  "express",
+  "mongodb",
+  "figma",
+  "python",
 ];
 
 const CATEGORY_OPTIONS = ["Frontend", "Backend", "Tools", "Design", "Other"];
@@ -15,22 +36,23 @@ export default function AdminSkills() {
   const { skills, addSkill, updateSkill, deleteSkill } = useSite();
   const [form, setForm] = useState(EMPTY_FORM);
   const [editId, setEditId] = useState(null);
-  const [showForm, setShowForm] = useState(false);
-  const [msg, setMsg] = useState(null);
+  const [error, setError] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(null);
 
-  const flash = (text, type = "success") => {
-    setMsg({ text, type });
-    setTimeout(() => setMsg(null), 3000);
-  };
-
-  const handleChange = (e) =>
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.name.trim() || !form.description.trim()) {
-      flash("Name aur description required hain.", "error");
+
+    if (!form.name.trim()) {
+      setError("Skill name zaroori hai.");
+      return;
+    }
+
+    if (!form.description.trim()) {
+      setError("Description zaroori hai.");
       return;
     }
 
@@ -38,213 +60,226 @@ export default function AdminSkills() {
       updateSkill(editId, {
         name: form.name.trim(),
         description: form.description.trim(),
-        icon: form.icon.trim().toLowerCase(),
+        icon: form.icon.trim().toLowerCase() || "react",
         category: form.category,
       });
-      flash(`"${form.name.trim()}" updated.`);
       setEditId(null);
     } else {
       addSkill({
         name: form.name.trim(),
         description: form.description.trim(),
-        icon: form.icon.trim().toLowerCase(),
+        icon: form.icon.trim().toLowerCase() || "react",
         category: form.category,
       });
-      flash(`"${form.name.trim()}" added.`);
     }
 
     setForm(EMPTY_FORM);
-    setShowForm(false);
+    setError("");
+    setConfirmDelete(null);
   };
 
   const startEdit = (skill) => {
     setForm({
       name: skill.name,
       description: skill.description,
-      icon: skill.icon || "",
+      icon: skill.icon || "react",
       category: skill.category || "Frontend",
     });
     setEditId(skill.id);
-    setShowForm(true);
+    setError("");
     setConfirmDelete(null);
+    // Scroll form into view if on mobile
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const cancelEdit = () => {
+    setForm(EMPTY_FORM);
+    setEditId(null);
+    setError("");
   };
 
   const handleDelete = (id) => {
-    const skill = skills.find((s) => s.id === id);
     deleteSkill(id);
-    flash(`"${skill?.name}" deleted.`);
     setConfirmDelete(null);
     if (editId === id) {
       setEditId(null);
       setForm(EMPTY_FORM);
-      setShowForm(false);
     }
   };
 
-  const cancelForm = () => {
-    setForm(EMPTY_FORM);
-    setEditId(null);
-    setShowForm(false);
-  };
-
   return (
-    <div className="adm-skills">
-      {/* Header */}
-      <div className="adm-sec-head">
-        <div>
-          <h3 className="adm-sec-title">Skills Management</h3>
-          <p className="adm-sec-sub">{skills.length} skill{skills.length !== 1 ? "s" : ""} saved</p>
-        </div>
-        {!showForm && (
-          <button
-            className="adm-btn adm-btn-accent"
-            onClick={() => { setShowForm(true); setEditId(null); setForm(EMPTY_FORM); }}
-          >
-            <Icon name="plus" size={16} /> Add Skill
-          </button>
-        )}
-      </div>
+    <>
+      <PageHeader
+        eyebrow="PORTFOLIO"
+        title="Skills"
+        text="Yahan add aur edit kiye hue skills public Skills page par live dikhte hain."
+      >
+        <span className="adm-pill big">{skills.length} total</span>
+      </PageHeader>
 
-      {/* Flash message */}
-      {msg && (
-        <div className={`adm-flash ${msg.type === "error" ? "adm-flash--err" : ""}`}>
-          {msg.text}
-        </div>
-      )}
-
-      {/* Form */}
-      {showForm && (
-        <form className="adm-card adm-skill-form" onSubmit={handleSubmit}>
-          <h4>{editId ? "Edit Skill" : "Add New Skill"}</h4>
-
-          <div className="adm-form-grid">
-            <div className="adm-field">
-              <label htmlFor="skill-name">Name *</label>
-              <input
-                id="skill-name"
-                name="name"
-                placeholder="e.g. React"
-                value={form.name}
-                onChange={handleChange}
-                maxLength={40}
-              />
-            </div>
-
-            <div className="adm-field">
-              <label htmlFor="skill-category">Category</label>
-              <select
-                id="skill-category"
-                name="category"
-                value={form.category}
-                onChange={handleChange}
-              >
-                {CATEGORY_OPTIONS.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="adm-field">
-              <label htmlFor="skill-icon">Icon key</label>
-              <select
-                id="skill-icon"
-                name="icon"
-                value={form.icon}
-                onChange={handleChange}
-              >
-                <option value="">— select —</option>
-                {ICON_OPTIONS.map((ic) => (
-                  <option key={ic} value={ic}>{ic}</option>
-                ))}
-              </select>
-              <span className="adm-hint">Or type a custom key below</span>
-              <input
-                name="icon"
-                placeholder="custom-icon-key"
-                value={form.icon}
-                onChange={handleChange}
-                maxLength={30}
-                style={{ marginTop: 6 }}
-              />
-            </div>
-
-            <div className="adm-field adm-field--full">
-              <label htmlFor="skill-desc">Description *</label>
-              <textarea
-                id="skill-desc"
-                name="description"
-                placeholder="Short description of this skill..."
-                value={form.description}
-                onChange={handleChange}
-                rows={3}
-                maxLength={200}
-              />
-            </div>
+      <div className="adm-split">
+        {/* Left Form */}
+        <form className="adm-card adm-form" onSubmit={handleSubmit}>
+          <div className="adm-card-head">
+            <h3>{editId ? "Edit Skill" : "New Skill"}</h3>
+            {editId && (
+              <span className="adm-chip approved">Editing</span>
+            )}
           </div>
 
-          <div className="adm-form-actions">
-            <button type="submit" className="adm-btn adm-btn-accent">
-              <Icon name="check" size={16} /> {editId ? "Update" : "Save"}
+          <label className="adm-field">
+            <span>Skill Name *</span>
+            <input
+              className="adm-input"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="e.g. React, Next.js, Docker"
+              maxLength={40}
+            />
+          </label>
+
+          <label className="adm-field">
+            <span>Category</span>
+            <select
+              className="adm-input"
+              name="category"
+              value={form.category}
+              onChange={handleChange}
+            >
+              {CATEGORY_OPTIONS.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="adm-field">
+            <span>Icon</span>
+            <select
+              className="adm-input"
+              name="icon"
+              value={form.icon}
+              onChange={handleChange}
+            >
+              {ICON_OPTIONS.map((ic) => (
+                <option key={ic} value={ic}>
+                  {ic.toUpperCase()}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="adm-field">
+            <span>Custom Icon Key (optional)</span>
+            <input
+              className="adm-input"
+              name="icon"
+              value={form.icon}
+              onChange={handleChange}
+              placeholder="e.g. tailwind, typescript"
+              maxLength={30}
+            />
+          </label>
+
+          <label className="adm-field">
+            <span>Description *</span>
+            <textarea
+              className="adm-input"
+              name="description"
+              rows="3"
+              value={form.description}
+              onChange={handleChange}
+              placeholder="e.g. Creating reusable component-based interfaces."
+              maxLength={220}
+            />
+          </label>
+
+          {error && <p className="adm-error">{error}</p>}
+
+          <div className="adm-actions">
+            <button type="submit" className="adm-btn">
+              <Icon name={editId ? "check" : "plus"} size={16} />
+              {editId ? "Update skill" : "Add skill"}
             </button>
-            <button type="button" className="adm-btn" onClick={cancelForm}>
-              Cancel
-            </button>
+            {editId && (
+              <button
+                type="button"
+                className="adm-btn adm-btn-ghost"
+                onClick={cancelEdit}
+              >
+                Cancel
+              </button>
+            )}
           </div>
         </form>
-      )}
 
-      {/* Skills list */}
-      {skills.length === 0 ? (
-        <div className="adm-card adm-empty">
-          <p>No skills yet. Click "Add Skill" to get started.</p>
-        </div>
-      ) : (
-        <div className="adm-skills-list">
-          {skills.map((skill) => (
-            <div className="adm-card adm-skill-row" key={skill.id}>
-              <div className="adm-skill-info">
-                <strong>{skill.name}</strong>
-                <span className="adm-skill-cat">{skill.category}</span>
-                <p>{skill.description}</p>
-              </div>
-
-              <div className="adm-skill-actions">
-                <button
-                  className="adm-btn adm-btn-sm"
-                  onClick={() => startEdit(skill)}
-                  title="Edit"
+        {/* Right Skills Grid */}
+        <div>
+          {skills.length === 0 ? (
+            <EmptyState
+              icon="skills"
+              title="Koi skill nahi mila"
+              text="Left side ke form se pehla skill add karein."
+            />
+          ) : (
+            <div className="adm-skills-grid">
+              {skills.map((s) => (
+                <article
+                  className={`adm-skill-item ${editId === s.id ? "editing" : ""}`}
+                  key={s.id}
                 >
-                  Edit
-                </button>
-                {confirmDelete === skill.id ? (
-                  <>
+                  <div className="adm-skill-item-header">
+                    <div>
+                      <h4 className="adm-skill-item-title">{s.name}</h4>
+                      <span className="adm-skill-item-cat">{s.category}</span>
+                    </div>
+                    <span className="adm-skill-item-icon-tag">
+                      {s.icon || "default"}
+                    </span>
+                  </div>
+
+                  <p className="adm-skill-item-desc">{s.description}</p>
+
+                  <div className="adm-card-actions">
                     <button
-                      className="adm-btn adm-btn-sm adm-btn-danger"
-                      onClick={() => handleDelete(skill.id)}
+                      className="adm-btn adm-btn-ghost adm-btn-sm"
+                      onClick={() => startEdit(s)}
                     >
-                      Confirm
+                      <Icon name="sliders" size={13} /> Edit
                     </button>
-                    <button
-                      className="adm-btn adm-btn-sm"
-                      onClick={() => setConfirmDelete(null)}
-                    >
-                      Cancel
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    className="adm-btn adm-btn-sm adm-btn-danger-outline"
-                    onClick={() => setConfirmDelete(skill.id)}
-                    title="Delete"
-                  >
-                    <Icon name="trash" size={14} />
-                  </button>
-                )}
-              </div>
+
+                    {confirmDelete === s.id ? (
+                      <div className="adm-actions" style={{ gap: 6 }}>
+                        <button
+                          className="adm-btn adm-btn-sm adm-btn-danger"
+                          onClick={() => handleDelete(s.id)}
+                        >
+                          Confirm
+                        </button>
+                        <button
+                          className="adm-btn adm-btn-ghost adm-btn-sm"
+                          onClick={() => setConfirmDelete(null)}
+                        >
+                          No
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        className="adm-btn adm-btn-ghost adm-btn-sm adm-btn-danger"
+                        onClick={() => setConfirmDelete(s.id)}
+                      >
+                        <Icon name="trash" size={13} /> Delete
+                      </button>
+                    )}
+                  </div>
+                </article>
+              ))}
             </div>
-          ))}
+          )}
         </div>
-      )}
-    </div>
+      </div>
+    </>
   );
 }
