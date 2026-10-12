@@ -9,6 +9,7 @@ const links = [
   { to: "/adminpanel", label: "Overview", icon: "dashboard", end: true },
   { to: "/adminpanel/visitors", label: "Live Visitors", icon: "eye" },
   { to: "/adminpanel/projects", label: "Projects", icon: "briefcase" },
+  { to: "/adminpanel/skills", label: "Skills", icon: "skills" },
   { to: "/adminpanel/reviews", label: "Reviews", icon: "star" },
   { to: "/adminpanel/messages", label: "Messages", icon: "mail" },
   { to: "/adminpanel/appearance", label: "Appearance", icon: "sliders" },

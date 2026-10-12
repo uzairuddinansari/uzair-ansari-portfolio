@@ -33,6 +33,12 @@ const ICONS = {
   check: <path d="M20 6 9 17l-5-5" />,
   plus: <path d="M12 5v14M5 12h14" />,
   menu: <path d="M3 6h18M3 12h18M3 18h18" />,
+  skills: (
+    <>
+      <path d="M16 18l6-6-6-6" />
+      <path d="M8 6l-6 6 6 6" />
+    </>
+  ),
   x: <path d="M18 6 6 18M6 6l12 12" />,
   trend: (
     <>

@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 const links = [
   { label: "Home", href: "#home" },
   { label: "About", href: "/about" },
-  { label: "Skills", href: "#skills" },
+  { label: "Skills", href: "/skills" },
   { label: "Projects", href: "#projects" },
   { label: "Journey", href: "#journey" },
   { label: "Reviews", href: "#reviews" },

@@ -1,10 +1,12 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import HOME from "./pages/HOME";
 import About from "./pages/About";
+import Skills from "./pages/Skills";
 import Admin from "./pages/Admin";
 import AdminPanel from "./pages/AdminPanel";
 import AdminVisitors from "./pages/AdminVisitors";
 import AdminProjects from "./pages/AdminProjects";
+import AdminSkills from "./pages/AdminSkills";
 import AdminReviews from "./pages/AdminReviews";
 import AdminMessages from "./pages/AdminMessages";
 import AdminAppearance from "./pages/AdminAppearance";
@@ -28,6 +30,7 @@ export default function App() {
           <Route index element={<AdminPanel />} />
           <Route path="visitors" element={<AdminVisitors />} />
           <Route path="projects" element={<AdminProjects />} />
+          <Route path="skills" element={<AdminSkills />} />
           <Route path="reviews" element={<AdminReviews />} />
           <Route path="messages" element={<AdminMessages />} />
           <Route path="appearance" element={<AdminAppearance />} />
@@ -35,8 +38,10 @@ export default function App() {
       </Route>
 
       <Route path="/about" element={<About />} />
+      <Route path="/skills" element={<Skills />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
+
