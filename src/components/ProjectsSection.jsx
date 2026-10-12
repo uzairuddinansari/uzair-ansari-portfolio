@@ -13,9 +13,9 @@ gsap.registerPlugin(ScrollTrigger);
 ───────────────────────────────────────────── */
 export default function ProjectsSection() {
   const { projects } = useSite();
-  const sectionRef  = useRef(null);   // outer pinning wrapper
-  const trackRef    = useRef(null);   // inner horizontal track
-  const headRef     = useRef(null);   // section heading
+  const sectionRef = useRef(null);   // outer pinning wrapper
+  const trackRef = useRef(null);   // inner horizontal track
+  const headRef = useRef(null);   // section heading
 
   /* ── Section heading entrance ── */
   useEffect(() => {
@@ -49,7 +49,7 @@ export default function ProjectsSection() {
     if (!projects.length) return;
 
     const section = sectionRef.current;
-    const track   = trackRef.current;
+    const track = trackRef.current;
     if (!section || !track) return;
 
     // Amount to scroll: total width of track minus one viewport width

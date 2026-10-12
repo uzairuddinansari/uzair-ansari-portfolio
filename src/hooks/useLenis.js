@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 /**
  * useLenis — initializes Lenis smooth scroll and wires it to GSAP's ticker
  * so ScrollTrigger stays in sync.
- * Call this ONCE at the top level (in HOME or App).
+ * Call this ONCE at the top level (in HOME).
  */
 export default function useLenis() {
   useEffect(() => {
