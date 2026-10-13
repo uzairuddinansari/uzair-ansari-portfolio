@@ -250,15 +250,25 @@ export default function SiteProvider({ children }) {
   /* ---------- Messages (contact form) ---------- */
   const addMessage = (message) =>
     setMessages((list) => [
-      { id: Date.now(), read: false, date: new Date().toISOString(), ...message },
+      { id: Date.now(), read: false, status: "unread", date: new Date().toISOString(), ...message },
       ...list,
     ]);
 
   const toggleMessageRead = (id) =>
-    setMessages((list) => list.map((m) => (m.id === id ? { ...m, read: !m.read } : m)));
-
+    setMessages((list) =>
+      list.map((m) => {
+        if (m.id !== id) return m;
+        const newRead = !m.read;
+        const newStatus = newRead ? "read" : "unread";
+        return { ...m, read: newRead, status: newStatus };
+      })
+    );
   const deleteMessage = (id) =>
     setMessages((list) => list.filter((m) => m.id !== id));
+
+  const setMessageStatus = (id, status) =>
+    setMessages((list) => list.map((m) => (m.id === id ? { ...m, status } : m)));
+
 
   /* ---------- Skills ---------- */
   const addSkill = (skill) =>
@@ -277,7 +287,7 @@ export default function SiteProvider({ children }) {
   const value = {
     projects, addProject, deleteProject,
     reviews, addReview, setReviewStatus, deleteReview,
-    messages, addMessage, toggleMessageRead, deleteMessage,
+    messages, addMessage, toggleMessageRead, deleteMessage, setMessageStatus,
     skills, addSkill, updateSkill, deleteSkill,
     theme, updateTheme, resetTheme,
   };

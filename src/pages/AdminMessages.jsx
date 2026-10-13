@@ -1,13 +1,26 @@
 import EmptyState from "../components/EmptyState";
 import Icon from "../components/Icon";
 import PageHeader from "../components/PageHeader";
+import { useState, useEffect } from "react";
+import emailjs from "@emailjs/browser";
 import useSite from "../hooks/useSite";
 import { timeAgo } from "../utils/format";
 
 // /adminpanel/messages  (website ke Contact form se aate hain)
 export default function AdminMessages() {
-  const { messages, toggleMessageRead, deleteMessage } = useSite();
+  const { messages, toggleMessageRead, deleteMessage, setMessageStatus } = useSite();
   const unread = messages.filter((m) => !m.read).length;
+  const [replyOpen, setReplyOpen] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState(null);
+  const [replyText, setReplyText] = useState("");
+  const [replyLoading, setReplyLoading] = useState(false);
+  const [replyError, setReplyError] = useState("");
+  const [replySuccess, setReplySuccess] = useState("");
+
+  // Initialize EmailJS with public key
+  useEffect(() => {
+    emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
+  }, []);
 
   return (
     <>
@@ -43,9 +56,18 @@ export default function AdminMessages() {
               <p>{m.message}</p>
 
               <div className="adm-card-actions">
-                <a className="adm-btn adm-btn-sm" href={`mailto:${m.email}`}>
+                <button
+                  className="adm-btn adm-btn-sm"
+                  onClick={() => {
+                    setSelectedMessage(m);
+                    setReplyText("");
+                    setReplyError("");
+                    setReplySuccess("");
+                    setReplyOpen(true);
+                  }}
+                >
                   Reply <Icon name="external" size={14} />
-                </a>
+                </button>
                 <button className="adm-btn adm-btn-ghost adm-btn-sm" onClick={() => toggleMessageRead(m.id)}>
                   {m.read ? "Mark unread" : "Mark read"}
                 </button>
@@ -55,6 +77,59 @@ export default function AdminMessages() {
               </div>
             </article>
           ))}
+        </div>
+      )}
+
+      {replyOpen && selectedMessage && (
+        <div className="adm-reply-modal" onClick={() => setReplyOpen(false)}>
+          <div className="adm-reply-content" onClick={e => e.stopPropagation()}>
+            <h3>Reply to {selectedMessage.name}</h3>
+            <p><strong>Subject:</strong> {selectedMessage.subject || "(no subject)"}</p>
+            <p><strong>Message:</strong></p>
+            <p className="adm-reply-original">{selectedMessage.message}</p>
+            <textarea
+              placeholder="Your reply..."
+              value={replyText}
+              onChange={e => setReplyText(e.target.value)}
+              rows={6}
+            />
+            {replyError && <p className="adm-error">{replyError}</p>}
+            {replySuccess && <p className="adm-success">{replySuccess}</p>}
+            <div className="adm-reply-actions">
+              <button
+                className="adm-btn"
+                disabled={replyLoading}
+                onClick={async () => {
+                  setReplyLoading(true);
+                  setReplyError("");
+                  setReplySuccess("");
+                  try {
+                    await emailjs.send(
+                      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+                      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+                      {
+                        customer_email: selectedMessage.email,
+                        subject: `Re: ${selectedMessage.subject || ""}`,
+                        message: replyText,
+                      }
+                    );
+                    setReplySuccess("Reply sent successfully.");
+                    setMessageStatus(selectedMessage.id, "replied");
+                  } catch (err) {
+                    console.error(err);
+                    setReplyError(`Failed to send reply: ${err.text || err.message}`);
+                  } finally {
+                    setReplyLoading(false);
+                  }
+                }}
+              >
+                {replyLoading ? "Sending…" : "Send Reply"}
+              </button>
+              <button className="adm-btn adm-btn-ghost" onClick={() => setReplyOpen(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </>
