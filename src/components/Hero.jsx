@@ -10,11 +10,11 @@ export default function Hero() {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-        tl.from(".hero-kicker", {
-          y: 15,
-          opacity: 0,
-          duration: 0.4,
-        }, "-=0.2")
+      tl.from(".hero-kicker", {
+        y: 15,
+        opacity: 0,
+        duration: 0.4,
+      }, "-=0.2")
         .from(".hero-title span", {
           yPercent: 110,
           opacity: 0,
@@ -53,7 +53,7 @@ export default function Hero() {
 
   return (
     <main className="portfolio-home" ref={homeRef}>
-    
+
       <section className="hero-section" id="home">
         <div className="hero-copy-column">
           <p className="hero-kicker">

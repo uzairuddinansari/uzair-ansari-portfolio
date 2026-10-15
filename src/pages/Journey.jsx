@@ -161,12 +161,12 @@ function TechwizIllus() {
 /* ─── Future learning map (Chapter 05) ─── */
 function FutureLearning() {
   const skills = [
-    { label: "Node.js", status: "Learning", icon: <><circle cx="12" cy="12" r="9"/><path d="M12 3v9l4 4"/></> },
-    { label: "MongoDB", status: "Exploring", icon: <><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></> },
-    { label: "TypeScript", status: "Exploring", icon: <><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8M12 8v8"/></> },
-    { label: "Next.js", status: "Next up", icon: <><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></> },
-    { label: "Accessibility", status: "Ongoing", icon: <><circle cx="12" cy="4" r="2"/><path d="M12 6v6M8 10l4 2 4-2M10 18l2-4 2 4"/></> },
-    { label: "Algorithms", status: "Ongoing", icon: <><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></> },
+    { label: "Node.js", status: "Learning", icon: <><circle cx="12" cy="12" r="9" /><path d="M12 3v9l4 4" /></> },
+    { label: "MongoDB", status: "Exploring", icon: <><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" /><circle cx="12" cy="9" r="2.5" /></> },
+    { label: "TypeScript", status: "Exploring", icon: <><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M8 12h8M12 8v8" /></> },
+    { label: "Next.js", status: "Next up", icon: <><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></> },
+    { label: "Accessibility", status: "Ongoing", icon: <><circle cx="12" cy="4" r="2" /><path d="M12 6v6M8 10l4 2 4-2M10 18l2-4 2 4" /></> },
+    { label: "Algorithms", status: "Ongoing", icon: <><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" /></> },
   ];
 
   return (
@@ -323,18 +323,18 @@ export default function Journey() {
         { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.5, clearProps: "transform,opacity" }
       )
-      .fromTo(
-        ".jrny-hero-title .jrny-word",
-        { yPercent: 105, opacity: 0 },
-        { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.12, clearProps: "transform,opacity" },
-        "-=0.2"
-      )
-      .fromTo(
-        ".jrny-hero-intro, .jrny-scroll-indicator",
-        { y: 18, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.55, stagger: 0.1, clearProps: "transform,opacity" },
-        "-=0.35"
-      );
+        .fromTo(
+          ".jrny-hero-title .jrny-word",
+          { yPercent: 105, opacity: 0 },
+          { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.12, clearProps: "transform,opacity" },
+          "-=0.2"
+        )
+        .fromTo(
+          ".jrny-hero-intro, .jrny-scroll-indicator",
+          { y: 18, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.55, stagger: 0.1, clearProps: "transform,opacity" },
+          "-=0.35"
+        );
     }, pageRef);
 
     return () => ctx.revert();
