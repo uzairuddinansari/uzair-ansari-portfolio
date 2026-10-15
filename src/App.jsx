@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import HOME from "./pages/HOME";
 import About from "./pages/About";
 import Skills from "./pages/Skills";
+import Journey from "./pages/Journey";
 import Admin from "./pages/Admin";
 import AdminPanel from "./pages/AdminPanel";
 import AdminVisitors from "./pages/AdminVisitors";
@@ -10,6 +11,7 @@ import AdminSkills from "./pages/AdminSkills";
 import AdminReviews from "./pages/AdminReviews";
 import AdminMessages from "./pages/AdminMessages";
 import AdminAppearance from "./pages/AdminAppearance";
+import AdminJourney from "./pages/AdminJourney";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./components/AdminLayout";
 import "./App.css";
@@ -31,6 +33,7 @@ export default function App() {
           <Route path="visitors" element={<AdminVisitors />} />
           <Route path="projects" element={<AdminProjects />} />
           <Route path="skills" element={<AdminSkills />} />
+          <Route path="journey" element={<AdminJourney />} />
           <Route path="reviews" element={<AdminReviews />} />
           <Route path="messages" element={<AdminMessages />} />
           <Route path="appearance" element={<AdminAppearance />} />
@@ -39,6 +42,7 @@ export default function App() {
 
       <Route path="/about" element={<About />} />
       <Route path="/skills" element={<Skills />} />
+      <Route path="/journey" element={<Journey />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
