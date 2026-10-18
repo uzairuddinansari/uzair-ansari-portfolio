@@ -57,7 +57,7 @@ export default function Navbar() {
 
         <a
           className="nav-resume"
-          href="/resume.pdf"
+          href="../1.pdf"
           target="_blank"
           rel="noreferrer"
         >

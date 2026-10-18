@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import "../styles/Hero.css";
-import heroPortrait from "../assets/hero-img.jpeg";
+import heroPortrait from "../assets/hero-img-removebg-preview.png";
 
 export default function Hero() {
   const homeRef = useRef(null);
@@ -87,28 +87,26 @@ export default function Hero() {
           </div>
         </div>
 
+        
         <div className="hero-visual">
-          <div className="hero-orbit hero-detail" />
-          <div className="hero-portrait">
-            <img
-              src={heroPortrait}
-              alt="Uzair Ansari"
-            />
-          </div>
+  <div className="hero-portrait">
+    <img src={heroPortrait} alt="Uzair Ansari" />
+  </div>
 
-          <div className="hero-note hero-detail">
+   <div className="hero-note hero-detail">
             <span>BUILD</span>
             <span>CREATE</span>
             <span>GROW</span>
             <i />
           </div>
-
           <div className="role-chip hero-detail">
             <span>CURRENTLY</span>
             <strong>Frontend Developer</strong>
             <b>↗</b>
           </div>
-        </div>
+
+
+</div>
       </section>
     </main>
   );

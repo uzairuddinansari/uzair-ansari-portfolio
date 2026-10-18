@@ -147,16 +147,28 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  margin-left: -18%;          /* image ko title ke neeche kheench kar overlap karta hai */
 }
-
 .hero-portrait {
   position: relative;
   z-index: 1;
-  width: 90%;
-  height: min(80vh, 570px);
+  width: 100%;
+  height: min(85vh, 640px);
   min-height: 400px;
   overflow: hidden;
-  background: radial-gradient(ellipse at 50% 25%, var(--surface-2), var(--surface) 70%);
+  background: none;
+  border: 0;
+  border-radius: 0;
+
+  /* edges ko background mein fade karta hai (no box look) */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, #000 30%, #000 75%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 18%, #000 80%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, #000 30%, #000 75%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 18%, #000 80%, transparent 100%);
+  mask-composite: intersect;
 }
 .hero-portrait img {
   width: 100%;
@@ -164,8 +176,11 @@
   display: block;
   object-fit: cover;
   object-position: top;
-  filter: saturate(.82) contrast(1.04);
+  filter: grayscale(1) brightness(.55) contrast(1.1);  /* dark moody look */
 }
+/* title image ke upar rahe */
+.hero-copy-column { z-index: 3; }
+.hero-title { position: relative; z-index: 3; }
 
 .hero-orbit {
   position: absolute;
@@ -248,11 +263,13 @@
   .hero-title { font-size: clamp(3.5rem, 12.5vw, 5.5rem); }
   .title-accent { white-space: normal; }
   .hero-copy { font-size: .9rem; }
-  .hero-visual { min-height: 380px; }
-  .hero-portrait { width: 83%; height: 440px; min-height: 0; }
+  /* .hero-visual { min-height: 380px; } */
+  /* .hero-portrait { width: 83%; height: 440px; min-height: 0; } */
   .hero-orbit { width: 78%; left: 5%; }
   .hero-note { right: 1%; top: 10%; }
   .role-chip { right: 0; bottom: 5%; }
+  .hero-visual { margin-left: 0; min-height: 380px; }
+.hero-portrait { width: 100%; height: 440px; min-height: 0; }
 }
 
 @media (max-width: 380px) {
